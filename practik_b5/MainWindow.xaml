@@ -6,20 +6,36 @@
         xmlns:local="clr-namespace:practik_b5"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="Height" Value="19"></Setter>
+            <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="FontWeight" Value="Bold"></Setter>
+            <Setter Property="Background" Value="LimeGreen"></Setter>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="auto"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <TextBox x:Name="text1" Height="19" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"></TextBox>
-        <TextBox x:Name="text2" Height="19" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"></TextBox>
-        <Button Click="Button_Click" Height="60" Width="160" Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" FontSize="30">Copy</Button>
-        <ProgressBar Grid.Row="2" Height="20" Grid.Column="0" Grid.ColumnSpan="3" IsIndeterminate="True"></ProgressBar>
+        <Label FontSize="30" FontWeight="Bold" Margin="4 28" Grid.Row="0">From :</Label>
+        <Label FontSize="30" FontWeight="Bold" Margin="40 28 0 0"  Grid.Row="1">To :</Label>
+        <TextBox x:Name="sourceTb" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" IsReadOnly="True" Text="{Binding Source}"></TextBox>
+        <TextBox x:Name="destTb" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" IsReadOnly="True" Text="{Binding Destination}"></TextBox>
+        <Button Click="SourceBtn" Height="50" Width="140" Margin="20" Padding="0 0 0 5" Grid.Row="0" Grid.Column="4" FontSize="30">Browse</Button>
+        <Button Click="DestBtn" Height="50" Width="140" Margin="20" Padding="0 0 0 5" Grid.Row="1" Grid.Column="4" FontSize="30">Browse</Button>
+        <Button Click="CopyBtn" Height="80" Width="760" Padding="0 0 0 11" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" FontSize="50">Copy</Button>
+        <ProgressBar Grid.Row="3" Margin="0 20" Height="30" Grid.Column="0" Grid.ColumnSpan="4" Value="{Binding Progress}"></ProgressBar>
     </Grid>
 </Window>
