@@ -1,5 +1,6 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
 using PropertyChanged;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
 
@@ -39,14 +40,16 @@ public partial class MainWindow : Window
         {
             string filename = Path.GetFileName(model.Source)!;
             string destFilename = Path.Combine(model.Destination!, filename);
-            copyFileAsync(model.Source!, destFilename);
+            CopyProcessesInfo info = new CopyProcessesInfo(filename);
+            model.AddProcess(info);
+            copyFileAsync(model.Source!, destFilename, info);
         }
         catch (Exception x)
         {
             MessageBox.Show(x.Message);
         }
     }
-    void copyFileAsync(string src, string dest)
+    void copyFileAsync(string src, string dest, CopyProcessesInfo info)
     {
         Task.Run(() =>
         {
@@ -59,19 +62,35 @@ public partial class MainWindow : Window
                 bytes = srcStream.Read(buffer, 0, buffer.Length);
                 desStream.Write(buffer, 0, bytes);
 
-                float percentage = desStream.Length / (srcStream.Length / 100);  
-                model.Progress = percentage;
+                float percentage = desStream.Length / (srcStream.Length / 100);
+                info.Percentage = percentage;
 
             } while (bytes > 0);
-            Thread.Sleep(500);
-            model.Progress = 0;
         });
+        info.Percentage = 100;
     }
 }
 [AddINotifyPropertyChangedInterface]
 class ViewModel
 {
+    ObservableCollection<CopyProcessesInfo> processes;
     public string? Source { get; set; }
     public string? Destination { get; set; }
-    public float Progress { get; set; }
+    public IEnumerable<CopyProcessesInfo> Processes => processes;
+    public ViewModel() { processes = []; }
+    public void AddProcess(CopyProcessesInfo info)
+    {
+        processes.Add(info);
+    }
+}
+[AddINotifyPropertyChangedInterface]
+class CopyProcessesInfo
+{
+    public string? Filename { get; set; }
+    public float Percentage { get; set; }
+    public CopyProcessesInfo(string filename, float percentage = 0)
+    {
+        Filename = filename;
+        Percentage = percentage;
+    }
 }
